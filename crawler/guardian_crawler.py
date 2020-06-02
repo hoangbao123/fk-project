@@ -9,7 +9,7 @@ from crawler_preprocess.parser import returnCoolHTML, returnCoolXML
 pp = pprint.PrettyPrinter(indent=4)
 producer = Producer()
 db_name = "my_db"
-
+topic = "news"
 
 # Fetch articles from BBC News
 def getGuardianNews():
@@ -32,8 +32,7 @@ def getGuardianNews():
                     body += paragraph.get_text().strip() + " "
                 a.body = body
             a.source = "The Guardian"
-            producer.send_message("baohn", json.dumps(a.to_map()))
-            print(a.to_map())
+            producer.send_message(topic, a.to_map())
             out = db[db_name].insert_one(a.__dict__)
             print('Inserted 1 article in db\n')
 

@@ -1,14 +1,19 @@
-import pprint
-import dateutil.parser
 import json
-from mongo_driver.article import Article
-from mongo_driver.models import db
+import pprint
+
+import dateutil.parser
+
 from crawler_preprocess.parser import returnCoolHTML, returnCoolXML
 from kafka_driver.kafka_producer import Producer
+from mongo_driver.article import Article
+from mongo_driver.models import db
+
 pp = pprint.PrettyPrinter(indent=4)
 db_name = "mydb"
 
 producer = Producer()
+
+
 # Fetch articles from Sky News
 def getSkyNews():
     data = returnCoolXML('http://feeds.skynews.com/feeds/rss/politics')
@@ -48,7 +53,7 @@ def fetchUSElectionSkyNews():
             if headline.find("a"):
                 url = headline.find("a")["href"]
                 print(url)
-                if not db['_past_article'].find({'url': url}).count():
+                if not db[db_name].find({'url': url}).count():
                     a = Article(url)
                     page = returnCoolHTML(url)
                     if page.find(class_="sdc-news-article-header__last-updated__timestamp"):
@@ -68,7 +73,7 @@ def fetchUSElectionSkyNews():
                         a.body = body
                     a.source = "Sky News"
                     producer.send_message("baohn", json.dumps(a.to_map()))
-                    out = db['_past_article'].insert_one(a.__dict__)
+                    out = db[db_name].insert_one(a.__dict__)
                     print(out)
 
 

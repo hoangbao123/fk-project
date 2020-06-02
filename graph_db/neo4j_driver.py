@@ -3,12 +3,12 @@ from neo4j import GraphDatabase
 
 def push_triples(tx, triples):
     for triple in triples:
-
         result = tx.run("CREATE (a:Ent {name: $head}) "
                         "CREATE (b:Ent {name: $tail}) "
                         "CREATE (a)-[:RELATION {name: $relation}]->(b)",
                         head=triple[0], tail=triple[1], relation=triple[2])
         print(result)
+
 
 def push_triple_merge(tx, triples):
     for triple in triples:
@@ -17,6 +17,7 @@ def push_triple_merge(tx, triples):
                         "MERGE (a)-[:RELATION {name: $relation}]->(b)",
                         head=triple[0], tail=triple[1], relation=triple[2])
         print(result)
+
 
 class Neo4j:
     def __init__(self):
@@ -28,6 +29,7 @@ class Neo4j:
             # session.read_transaction(print_friends_of, "Ian")
             # session.write_transaction(push_triples, triples)
             session.write_transaction(push_triple_merge, triples)
+
 
 if __name__ == "__main__":
     neo = Neo4j()

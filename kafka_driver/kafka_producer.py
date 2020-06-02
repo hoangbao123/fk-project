@@ -15,7 +15,7 @@ class Producer:
                 json.dumps(x).encode('utf-8'))
 
     def send_message(self, topic, value):
-        print("Send_mess to {} with value {}".format(topic, value))
+        print("Send_mess to {}".format(topic))
         self.producer.send(topic, value=value)
 
 

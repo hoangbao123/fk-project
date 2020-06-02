@@ -7,7 +7,8 @@ from mongo_driver.models import db
 
 pp = pprint.PrettyPrinter(indent=4)
 producer = Producer()
-
+db_name = "news"
+topic = "news"
 
 # Fetch articles from BBC News
 def getBBCArticle():
@@ -16,7 +17,7 @@ def getBBCArticle():
     for article in data.find_all("item"):
         url = article.find("guid").get_text()
         print(url)
-        if not db['_article'].find({'url': url}).count():
+        if not db[db_name].find({'url': url}).count():
             a = Article(article.find("guid").get_text())
             page = returnCoolHTML(article.find("guid").get_text())
             if page.find(class_="story-body__inner"):
@@ -40,9 +41,8 @@ def getBBCArticle():
                     float(page.find('li', {"class": "mini-info-list__item"}).find('div')['data-seconds']))
             a.source = "BBC"
             print('Inserted 1 article in db\n')
-            # producer.send_message("fakenew", json.dumps(a))
-            print(a.to_map())
-            out = db['_article'].insert_one(a.__dict__)
+            producer.send_message(topic, a.to_map())
+            out = db[db_name].insert_one(a.__dict__)
 
 
 def fetchUSElectionBBC():
@@ -57,4 +57,5 @@ def fetchUSElectionBBC():
 
 
 if __name__ == "__main__":
-    getBBCArticle()
+    # getBBCArticle()
+    fetchUSElectionBBC()

@@ -13,7 +13,7 @@ MongoPort = 27017
 client = MongoClient('mongodb://'+MongoHost+':'+str(MongoPort)+'/test')
 client2 = MongoClient('mongodb://'+MongoHost+':'+str(MongoPort)+'/test')
 
-db=client['test']
+db=client['news']
 db2=client2['test']
 
 # Check Connection

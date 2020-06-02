@@ -39,3 +39,4 @@ hibernate.cfg.xml
 .gradle/
 
 *.pyc
+*.out
